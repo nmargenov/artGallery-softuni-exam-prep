@@ -29,10 +29,25 @@ function deletePublictionById(publicationId){
     return Publication.findByIdAndDelete(publicationId);
 }
 
+function editPublicationById(publicationId,title,paintingTechnique,artPicture,certificate){
+    if (!pattern.test(artPicture)) {
+        throw new Error("Invalid art picture!");
+    }
+
+    const publication = {
+        title,
+        paintingTechnique,
+        artPicture,
+        certificate
+    };
+
+    return Publication.findByIdAndUpdate(publicationId,publication,{runValidators:true});
+}
 
 module.exports = {
     createPublication,
     getAllPublications,
     getPublicationById,
     deletePublictionById,
+    editPublicationById,
 }

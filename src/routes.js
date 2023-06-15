@@ -10,6 +10,9 @@ router.use('/posts',publicationController);
 
 router.get('*',(req,res)=>{
     res.status(404).render('404');
-})
+});
+router.post('*',(req,res)=>{
+    res.status(404).render('404');
+});
 
 module.exports = router;
