@@ -15,19 +15,19 @@ const publicationSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Art Picture is required!'],
     },
-    cerfiticate: {
+    certificate: {
         type: String,
-        required: [true, 'Cerfiticate is required!'],
+        required: [true, 'certificate is required!'],
         enum: {
             values: ['yes', 'no'],
-            message: 'Invalid cerfiticate!'
+            message: 'Invalid certificate! Only \'yes\' and \'no\'!'
         }
     },
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    usersSchared:[{
+    usersShared:[{
         type: mongoose.Schema.Types.ObjectId,
         ref:'User'
     }]
