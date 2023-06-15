@@ -44,10 +44,23 @@ function editPublicationById(publicationId,title,paintingTechnique,artPicture,ce
     return Publication.findByIdAndUpdate(publicationId,publication,{runValidators:true});
 }
 
+function sharePublication(publicationId,userId,publication){
+    const alreadyShared = checkIfAlreadyShared(publication,userId);
+    if(alreadyShared){
+        throw new Error('Already shared');
+    }
+    return Publication.findByIdAndUpdate(publicationId,{$push:{usersShared:userId}});
+}
+
+function checkIfAlreadyShared(publication,userId){
+    return publication.usersShared.map(u=>u.toString()).includes(userId);
+}
+
 module.exports = {
     createPublication,
     getAllPublications,
     getPublicationById,
     deletePublictionById,
     editPublicationById,
+    sharePublication
 }

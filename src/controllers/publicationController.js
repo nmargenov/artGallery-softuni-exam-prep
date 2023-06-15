@@ -1,4 +1,4 @@
-const { createPublication, getAllPublications, getPublicationById, deletePublictionById, editPublicationById } = require('../managers/publicationManager');
+const { createPublication, getAllPublications, getPublicationById, deletePublictionById, editPublicationById, sharePublication } = require('../managers/publicationManager');
 const { mustBeAuth } = require('../middlewares/authMiddleware');
 const { getErrorMessage } = require('../utils/errorHelper');
 
@@ -103,6 +103,37 @@ router.post('/:publicationId/edit', mustBeAuth, async (req, res) => {
     } catch (err) {
         const error = getErrorMessage(err);
         res.status(400).render('tasks/edit', {error, publication });
+    }
+});
+
+router.get('/:publicationId/edit',mustBeAuth,async(req,res)=>{
+    const publicationId = req.params.publicationId;
+    const loggedUser = req.user._id;
+    try {
+        const publication = await getPublicationById(publicationId).lean();
+        if (!publication || publication.author._id != loggedUser) {
+            throw new Error('Bad request!');
+        }
+        await editPublicationById(publicationId,title,paintingTechnique,artPicture,certificate);
+        res.redirect(`/posts/${publicationId}/details`);
+    } catch (err) {
+        const error = getErrorMessage(err);
+        res.status(400).render('tasks/edit', {error, publication });
+    }
+});
+
+router.get('/:publicationId/share',mustBeAuth,async(req,res)=>{
+    const publicationId = req.params.publicationId;
+    const loggedUser = req.user._id;
+    try {
+        const publication = await getPublicationById(publicationId).lean();
+        if (!publication || publication.author._id == loggedUser) {
+            throw new Error('Bad request!');
+        }
+        await sharePublication(publicationId,loggedUser,publication);
+        res.redirect('/');
+    } catch (err) {
+        res.status(404).render('404');
     }
 });
 module.exports = router;
