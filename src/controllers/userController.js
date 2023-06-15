@@ -30,17 +30,17 @@ router.get('/register', mustBeGuest,(req, res) => {
 
 router.post('/register',mustBeGuest,async(req,res)=>{
     const username = req.body.username?.trim();
-    const email = req.body.email?.trim();
+    const address = req.body.address?.trim();
     const password = req.body.password?.trim();
     const rePassword = req.body.rePassword?.trim();
 
     try{
-        const token = await register(username,email,password,rePassword);
+        const token = await register(username,address,password,rePassword);
         res.cookie(AUTH_COOKIE,token);
         res.redirect('/');
     }catch(err){
         const error = getErrorMessage(err);
-        res.status(400).render('users/register',{error,username,email});
+        res.status(400).render('users/register',{error,username,address});
     }
 });
 
