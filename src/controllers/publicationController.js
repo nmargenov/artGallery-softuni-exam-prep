@@ -1,4 +1,5 @@
 const { createPublication, getAllPublications, getPublicationById, deletePublictionById, editPublicationById, sharePublication, checkIfAlreadyShared } = require('../managers/publicationManager');
+const { addPublicationToUser, removePublictionFromUser } = require('../managers/userManager');
 const { mustBeAuth } = require('../middlewares/authMiddleware');
 const { getErrorMessage } = require('../utils/errorHelper');
 
@@ -26,7 +27,8 @@ router.post('/create', mustBeAuth, async (req, res) => {
     const author = req.user._id;
 
     try {
-        await createPublication(title, paintingTechnique, artPicture, certificate, author);
+        const publication = await createPublication(title, paintingTechnique, artPicture, certificate, author);
+        await addPublicationToUser(author,publication._id);
         res.redirect('/posts/gallery');
     }
     catch (err) {
@@ -62,6 +64,7 @@ router.get('/:publicationId/delete', mustBeAuth, async (req, res) => {
             throw new Error('Bad request!');
         }
         await deletePublictionById(publicationId);
+        await removePublictionFromUser(loggedUser,publicationId);
         res.redirect('/posts/gallery');
     } catch (err) {
         res.status(404).render('404');

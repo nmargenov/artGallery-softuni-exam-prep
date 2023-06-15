@@ -62,7 +62,23 @@ async function register(username,address,password,rePassword){
     return token;
 }
 
+function addPublicationToUser(userId,publicationId){
+    return User.findByIdAndUpdate(userId,{$push:{myPublications:publicationId}});
+}
+
+function removePublictionFromUser(userId,publicationId){
+    return User.findByIdAndUpdate(userId,{$pull:{myPublications:publicationId}});
+}
+
+
+function getUserById(userId){
+    return User.findById(userId);
+}
+
 module.exports = {
     register,
-    login
+    login,
+    addPublicationToUser,
+    getUserById,
+    removePublictionFromUser
 }
