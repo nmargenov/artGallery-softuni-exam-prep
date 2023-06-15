@@ -21,8 +21,13 @@ function getAllPublications(){
     return Publication.find();
 }
 
+function getPublicationById(publicationId){
+    return Publication.findById(publicationId).populate('author');
+}
+
 
 module.exports = {
     createPublication,
-    getAllPublications
+    getAllPublications,
+    getPublicationById
 }
