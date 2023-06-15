@@ -62,5 +62,6 @@ module.exports = {
     getPublicationById,
     deletePublictionById,
     editPublicationById,
-    sharePublication
+    sharePublication,
+    checkIfAlreadyShared
 }

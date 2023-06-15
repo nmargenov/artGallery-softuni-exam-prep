@@ -1,4 +1,4 @@
-const { createPublication, getAllPublications, getPublicationById, deletePublictionById, editPublicationById, sharePublication } = require('../managers/publicationManager');
+const { createPublication, getAllPublications, getPublicationById, deletePublictionById, editPublicationById, sharePublication, checkIfAlreadyShared } = require('../managers/publicationManager');
 const { mustBeAuth } = require('../middlewares/authMiddleware');
 const { getErrorMessage } = require('../utils/errorHelper');
 
@@ -41,10 +41,12 @@ router.get('/:publicationId/details', async (req, res) => {
 
     try {
         const publication = await getPublicationById(publicationId).lean();
+        const isOwner = publication.author._id == loggedUser;
+        const hasShared = loggedUser && checkIfAlreadyShared(publication,loggedUser);
         if (!publication) {
             throw new Error('Invalid publication!');
         }
-        res.status(302).render('tasks/details', { publication });
+        res.status(302).render('tasks/details', { publication,isOwner,hasShared });
     } catch (err) {
         res.status(404).render('404');
     }
