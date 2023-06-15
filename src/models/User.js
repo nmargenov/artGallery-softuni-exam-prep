@@ -16,7 +16,8 @@ const userSchema = new mongoose.Schema({
         required:[true,'Password is required!']
     },
     myPublications:[{
-        type:mongoose.Schema.Types.ObjectId
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Publication'
     }]
 });
 
