@@ -25,9 +25,14 @@ function getPublicationById(publicationId){
     return Publication.findById(publicationId).populate('author');
 }
 
+function deletePublictionById(publicationId){
+    return Publication.findByIdAndDelete(publicationId);
+}
+
 
 module.exports = {
     createPublication,
     getAllPublications,
-    getPublicationById
+    getPublicationById,
+    deletePublictionById,
 }

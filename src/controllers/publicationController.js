@@ -1,4 +1,4 @@
-const { createPublication, getAllPublications, getPublicationById } = require('../managers/publicationManager');
+const { createPublication, getAllPublications, getPublicationById, deletePublictionById } = require('../managers/publicationManager');
 const { mustBeAuth } = require('../middlewares/authMiddleware');
 const { getErrorMessage } = require('../utils/errorHelper');
 
@@ -50,4 +50,19 @@ router.get('/:publicationId/details',async(req,res)=>{
     }
 });
 
+router.get('/:publicationId/delete',mustBeAuth,async(req,res)=>{
+    const publicationId = req.params.publicationId;
+    const loggedUser = req.user._id;
+
+    try{
+        const publication = await getPublicationById(publicationId);
+        if(!publication || publication.author._id != loggedUser){
+            throw new Error('Bad request!');
+        }
+        await deletePublictionById(publicationId);
+        res.redirect('/posts/gallery');
+    }catch(err){
+        res.status(404).render('404');
+    }
+});
 module.exports = router;
